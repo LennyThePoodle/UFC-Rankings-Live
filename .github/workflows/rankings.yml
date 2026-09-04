@@ -3,9 +3,8 @@ name: Append UFC rankings
 
 on:
   schedule:
-    # Tuesdays 12:00 UTC. UFC posts rankings updates Tuesday afternoons ET,
-    # so this may land before the update -- adjust after watching a few runs.
-    - cron: '0 12 * * 2'
+    # Wedensday 12:00 UTC. UFC posts rankings updates Tuesday afternoons ET,
+    - cron: '0 12 * * 3'
   workflow_dispatch:        # manual trigger, use this to test
 
 permissions:
