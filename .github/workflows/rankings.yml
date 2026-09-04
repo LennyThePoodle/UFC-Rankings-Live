@@ -1,0 +1,36 @@
+# Save as .github/workflows/rankings.yml in your repo.
+name: Append UFC rankings
+
+on:
+  schedule:
+    # Tuesdays 12:00 UTC. UFC posts rankings updates Tuesday afternoons ET,
+    # so this may land before the update -- adjust after watching a few runs.
+    - cron: '0 12 * * 2'
+  workflow_dispatch:        # manual trigger, use this to test
+
+permissions:
+  contents: write           # required for the bot to push commits
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Scrape rankings
+        run: python scrape_rankings.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "rankings-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add rankings_current.csv
+          git diff --staged --quiet || git commit -m "rankings $(date -u +%F)"
+          git push
